@@ -47,7 +47,10 @@ class Fighter {
 
   //this logs who attacked who
   attack(target) {
-    console.log(this.name + ' attacked ' + target.name);
+    let amount = 0
+    amount = Math.round(Math.random() * this.atk)
+    console.log(target.name + ' received ' + amount + " damage")
+    koCheck(target, amount)
   }
 
   single(target) {
