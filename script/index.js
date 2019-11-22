@@ -29,6 +29,7 @@ let graphicsBox;
 let barsBox;
 let controlsBox;
 let outputBox;
+let oldtext;
 
 class Fighter {
   constructor(name, charaName) {
@@ -49,13 +50,23 @@ class Fighter {
   attack(target) {
     let amount = 0
     amount = Math.round(Math.random() * this.atk)
+
     console.log(target.name + ' received ' + amount + " damage")
+
     koCheck(target, amount)
+
   }
 
   single(target) {
-    this.attack(target);
+  oldtext = '<br>' + outputBox.innerHTML
+  this.attack(target);
+  // outputBox.innerHTML = '<br>' + this.name + " Dealt " + amount + ' damage to ' + target.name + outputBox.innerHTML;
+  if (logging) {
+    outputBox.innerHTML += oldtext;
   }
+  endTurn();
+}
+  
 
   double(target) {
     this.attack(target);
@@ -106,7 +117,10 @@ function showControls() {
 //checks the target's HP is less than or equal to 0, Then retuns true or false.
 function koCheck(target, amount) {
   target.hp = target.hp - amount;
+  console.log(target.hp);
   if (target.hp <= 0) {
+    console.log(target.name + " sadly passed away")
+    console.log("Press" + " 'F' " + "To pay respects");
     return true;
   } else {
     return false;
