@@ -12,6 +12,11 @@ let playerTurn = false;
 let logging = true;
 let Player0;
 let Player1;
+//varible for finding % of players HP used for the HealthBar
+let player0PercentHP;
+let player1PercentHP;
+let player0PercentSP;
+let player1PercentSP;
 // declared variables for the boxes
 let gameBox;
 let headerBox;
@@ -34,11 +39,11 @@ class Fighter {
   }
   //this logs who attacked who
   attack(target) {
-    console.log(this.name + ' attacked ' + target.name); //logs attack
-      let damage = (Math.round(Math.random() + 1) * this.atk) //Does the attack with a random chance to be double. this is done by getting random number between one and zero, converts it to just one or zero and adds one to it making it randomly one or two. then it takes the one or two times the damage to deal random double damage
-      outputBox.innerHTML += '<br>' + this.name + ' attacked ' + target.name + ' for ' + damage +  ' damage!' // outputs to the outputbox
-      koCheck(target, damage); //runs ko check
-    document.write(damage);
+    let amount = 0
+    amount = Math.round(Math.random() * this.atk)
+      outputBox.innerHTML = target.name
+    console.log(target.name + ' received ' + amount + " damage")
+    koCheck(target, amount)
   }
   single(target) {
     this.attack(target);
@@ -68,6 +73,7 @@ function startup() {
   console.log("My name is " + Player0.name + " and my ATK is " + Player0.atk)
   console.log("My name is " + Player1.name + " and my ATK is " + Player1.atk)
   showControls() //runs the showControls() function
+  updateBars() //runs the updateBars() function
 }
 function showControls() {
   //checks to see which players turn it is and show the apropriate controls
@@ -78,6 +84,96 @@ function showControls() {
     //show buttons for player0 and overwrites player1's controls
     controlsBox.innerHTML = '<button type="button" name="attack" onclick="Player0.single(Player1)">Single Attack!</button>'
   }
+}
+//checks the target's HP is less than or equal to 0, Then retuns true or false.
+function koCheck(target, amount) {
+  target.hp = target.hp - amount;
+  console.log(target.hp);
+  if (target.hp <= 0) {
+    console.log(target.name + " sadly passed away")
+    console.log("Press" + " 'F' " + "To pay respects");
+    return true;
+  } else {
+    return false;
+  }
+}
+function updateBars() {
+  //calculates the percent of HP
+  player0PercentHP = (Player0.hp / START_HP) * 100
+  player1PercentHP = (Player1.hp / START_HP) * 100
+  player0PercentHP = (Player0.sp / START_SP) * 100
+  player1PercentHP = (Player1.sp / START_SP) * 100
+  //Makes sure Player0's health is not greater than 100% or less than 0%
+  if (player0PercentHP <= 0) {
+    player0PercentHP = 0
+  } else if (player0PercentHP > 100) {
+    player0PercentHP = 100
+  } else {
+    player0PercentHP = player0PercentHP
+  }
+  //Makes sure Player1's health is not greater than 100% or less than 0%
+  if (player1PercentHP <= 0) {
+    player1PercentHP = 0
+  } else if (player1PercentHP > 100) {
+    player1PercentHP = 100
+  } else {
+    player1PercentHP = player1PercentHP
+  }
+  //Makes sure Player0's SP is not greater than 100% or less than 0%
+  if (player0PercentSP <= 0) {
+    player0PercentSP = 0
+  } else if (player0PercentSP > 100) {
+    player0PercentSP = 100
+  } else {
+    player0PercentSP = player0PercentSP
+  }
+  //Makes sure Player1's SP is not greater than 100% or less than 0%
+  if (player1PercentSP <= 0) {
+    player1PercentSP = 0
+  } else if (player1PercentSP > 100) {
+    player1PercentSP = 100
+  } else {
+    player1PercentSP = player1PercentSP
+  }
+  barsBox.innerHTML = ''
+  barsBox.innerHTML += 'P0<div class="hpBar"><div style="height:' + player0PercentHP + '%; width: 100%;" id="p0HPfill" class="HPfill"></div></div>'
+  barsBox.innerHTML += '<div class="spBar"><div style="height:' + player0PercentSP + '%; width: 100%;" id="p0SPfill" class="SPfill"></div></div>'
+  barsBox.innerHTML += 'P1<div class="hpBar"><div style="height:' + player1PercentHP + '%; width: 100%;" id="p1HPfill" class="HPfill"></div></div>'
+  barsBox.innerHTML += '<div class="spBar"><div style="height:' + player1PercentSP + '%; width: 100%;" id="p1SPfill" class="SPfill"></div></div>'
+}
+// EndTurn code
+function endTurn() {
+  playerTurn = !playerTurn
+  if (kocheck(Player0, 0) || kocheck(Player1, 0)){
+    hideControls();
+  }
+  //Makes sure Player0's SP is not greater than 100% or less than 0%
+  if (player0PercentSP <= 0) {
+    player0PercentSP = 0
+  } else if (player0PercentSP > 100) {
+    player0PercentSP = 100
+  } else {
+    player0PercentSP = player0PercentSP
+  }
+  //Makes sure Player1's SP is not greater than 100% or less than 0%
+  if (player1PercentSP <= 0) {
+    player1PercentSP = 0
+  } else if (player1PercentSP > 100) {
+    player1PercentSP = 100
+  } else {
+    player1PercentSP = player1PercentSP
+  }
+  barsBox.innerHTML = ''
+  barsBox.innerHTML += 'P0<div class="hpBar"><div style="height:' + player0PercentHP + '%; width: 100%;" id="p0HPfill" class="HPfill"></div></div>'
+  barsBox.innerHTML += '<div class="spBar"><div style="height:' + player0PercentSP + '%; width: 100%;" id="p0SPfill" class="SPfill"></div></div>'
+  barsBox.innerHTML += 'P1<div class="hpBar"><div style="height:' + player1PercentHP + '%; width: 100%;" id="p1HPfill" class="HPfill"></div></div>'
+  barsBox.innerHTML += '<div class="spBar"><div style="height:' + player1PercentSP + '%; width: 100%;" id="p1SPfill" class="SPfill"></div></div>'
+}
+function hideContols() {
+  controlsBox.innerHTML = "";
+}
+function hideContols() {
+  controlsBox.innerHTML = "";
 }
 /*
 MHW = 'delicious'
